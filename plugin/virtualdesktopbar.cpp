@@ -469,6 +469,13 @@ const QList<int> VirtualDesktopBar::getEmptyDesktops() const {
         }
     }
 
+	// Only remove 2 last desktops
+    for (auto desktopId : emptyDesktops) {
+        if (desktopId < numberOfDesktops - 1) {
+            emptyDesktops.removeOne(desktopId);
+        }
+    }
+
     return emptyDesktops;
 }
 
