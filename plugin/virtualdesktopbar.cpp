@@ -469,13 +469,6 @@ const QList<int> VirtualDesktopBar::getEmptyDesktops() const {
         }
     }
 
-	// Only remove 2 last desktops
-    for (auto desktopId : emptyDesktops) {
-        if (desktopId < numberOfDesktops - 1) {
-            emptyDesktops.removeOne(desktopId);
-        }
-    }
-
     return emptyDesktops;
 }
 
@@ -496,14 +489,27 @@ void VirtualDesktopBar::removeEmptyDesktops() {
         QThread::msleep(100);
     }
 
-    for (int i = emptyDesktops.length() - 1; i >= 1; i--) {
-        int emptyDesktopNumber = emptyDesktops[i];
-        removeDesktop(emptyDesktopNumber);
+    // for (int i = emptyDesktops.length() - 1; i >= 1; i--) {
+    //     int emptyDesktopNumber = emptyDesktops[i];
+    //     removeDesktop(emptyDesktopNumber);
+    // }
+    // Remove only last desktop
+    int emptyDesktopsCount = emptyDesktops.length();
+
+    if (emptyDesktopsCount >= 2) {
+        int lastDesktopNumber = emptyDesktops[emptyDesktopsCount - 1];
+        int prevLastDesktopNumber = emptyDesktops[emptyDesktopsCount - 2];
+
+        if (lastDesktopNumber == prevLastDesktopNumber + 1) {
+            removeDesktop(lastDesktopNumber);
+        }
     }
 
     if (cfg_enableKWinScriptsAPI) {
         dbusInterface.call("invokeShortcut", "VDB-Event-RemoveEmptyDesktops-After");
     }
+
+    emit emptyDesktopsUpdated(emptyDesktops);
 }
 
 void VirtualDesktopBar::onWindowAdded(WId id) {
