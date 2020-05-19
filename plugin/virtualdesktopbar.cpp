@@ -57,6 +57,7 @@ void VirtualDesktopBar::addNewDesktop(bool guard, const QString desktopName) {
     }
     const int numberOfDesktops = KWindowSystem::numberOfDesktops();
     netRootInfo.setNumberOfDesktops(numberOfDesktops + 1);
+    netRootInfo.setDesktopLayout(netRootInfo.desktopLayoutOrientation(), 1, numberOfDesktops + 1, netRootInfo.desktopLayoutCorner());
     if (!desktopName.isNull() && !desktopName.isEmpty()) {
         renameDesktop(numberOfDesktops + 1, desktopName);
     }
